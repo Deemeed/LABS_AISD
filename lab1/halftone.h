@@ -26,8 +26,8 @@ public:
 
     Halftone operator!() const;
 
-    Halftone& operator+=(const Halftone& other) const;
-    Halftone& operator*=(const Halftone& other) const;
+    Halftone& operator+=(const Halftone& other);
+    Halftone& operator*=(const Halftone& other);
 
     Halftone& operator+=(T constant);
     Halftone& operator*=(T constant);
@@ -134,7 +134,7 @@ Halftone<T> Halftone<T>::operator!() const {
 
 // Matrix
 template<typename T>
-Halftone<T> Halftone<T>::operator+(const Halftone<T>& other) const {
+Halftone<T>& Halftone<T>::operator+=(const Halftone<T>& other) {
     size_t height = std::max(_height, other._height);
     size_t width = std::max(_width, other._width);
     Halftone<T> result(height, width);
@@ -145,18 +145,33 @@ Halftone<T> Halftone<T>::operator+(const Halftone<T>& other) const {
             T v2 = (x < other._width && y < other._height) ? other(x, y) : T{};
             result(x, y) = std::min<T>(v1 + v2, std::numeric_limits<T>::max());
         }
+    *this = result;
+    return *this;
+}
 
+template<typename T>
+Halftone<T> operator+(const Halftone<T>& lhs, const Halftone<T>& rhs) {
+    Halftone<T> result(lhs);
+    result += rhs;
     return result;
 }
 
 
 template<typename T>
-Halftone<T> Halftone<T>::operator*(const Halftone<T>& other) const {
-    if (_height != other._height || _width != other._width) throw std::invalid_argument("Sizes don't match!");
-    Halftone<T> result(*this);
-    for (size_t i = 0; i < size(); ++i) {
-        result._data[i] = _data[i] * other._data[i];
+Halftone<T>& Halftone<T>::operator*=(const Halftone<T>& other) {
+    if (_width != other._width || _height != other._height) {
+        throw std::invalid_argument("Images must have the same dimensions for multiplication.");
     }
+    for (size_t i = 0; i < size(); ++i) {
+        _data[i] = std::min<T>(_data[i] * other._data[i], std::numeric_limits<T>::max());
+    }
+    return *this;
+}
+
+template<typename T>
+Halftone<T> operator*(const Halftone<T>& lhs, const Halftone<T>& rhs) {
+    Halftone<T> result(lhs);
+    result *= rhs;
     return result;
 }
 //Matrix
