@@ -16,6 +16,19 @@ template<typename T>
 class List {
 	Node* _tail { nullptr };
 
+	size_t size() const {
+		if (!_tail) return 0;
+
+		size_t size = 0;
+		Node<T>* current = _tail->_next;
+		do {
+			++size;
+			current = current->_next;
+		} while (current != _tail->_next);
+
+		return size;
+	}
+
 public:
 	List() = default;
 	List(const List& other);
@@ -34,8 +47,8 @@ public:
 
 	void delete_node(T data);
 
-	Node* get(size_t idx);
-	void insert(size_t idx, T data);
+	T& operator[](size_t idx);
+	const T& operator[](size_t idx) const;
 
 	void print();
 };
@@ -50,15 +63,19 @@ template<typename T>
 List<T>::List(const List<T>& other) : _tail(nullptr) {
 	if (!other._tail) return;
 
-	Node* tmp = other._tail->_next;
+	Node* node = other._tail->_next;
 	do {
-		push_tail(tmp->_data);
-		tmp = tmp->_next;
-	} while (tmp != other._tail->_next);
+		push_tail(node->_data);
+		node = node->_next;
+	} while (node != other._tail->_next);
 }
 template<typename T>
 List<T>::List(size_t size) : _tail(nullptr) {
+	std::random_device rd;
+	std::mt19937 gen(rd());
+
 	for (size_t i = 0; i < size; ++i) {
+		value = std::uniform_int_distribution<>(0, 127)(gen);
 		push_tail(value);
 	}
 }
@@ -174,7 +191,7 @@ void List<T>::pop_tail() {
 		return;
 	}
 
-	Node* current = _tail->_next;
+	Node<T>* current = _tail->_next;
 	while (current->_next != _tail) {
 		current = current->_next;
 	}
@@ -186,7 +203,72 @@ void List<T>::pop_tail() {
 
 template<typename T>
 void List<T>::delete_node(T data) {
+	if (!_tail) return;
 
+	Node* current = _tail->_next;
+	Node* prev = _tail;
+
+	bool modified = false;
+
+	do {
+		if (current->_data == data) {
+			Node* toDelete = current;
+			prev->_next = current->_next;
+
+			if (current == _tail) {
+				_tail = (current == current->_next) ? nullptr : prev;
+			}
+
+			current = prev->_next;
+			delete toDelete;
+			modified = true;
+		}
+		else {
+			prev = current;
+			current = current->_next;
+		}
+	} while (modified ? current != _tail : current != _tail->_next);
+
+	if (_tail && _tail->_data == data) {
+		Node* toDelete = _tail;
+		if (_tail == _tail->_next) {
+			_tail = nullptr;
+		}
+		else {
+			prev->_next = _tail->_next;
+			_tail = prev;
+		}
+		delete toDelete;
+	}
+}
+
+template<typename T>
+T& List<T>::operator[](size_t idx) {
+	size_t size = size();
+	if (idx >= size) {
+		throw std::out_of_range("Index out of range!")
+	}
+
+	Node<T>* current = _tail->_next;
+	for (size_t i = 0; i < idx; ++i) {
+		current = current->_next;
+	}
+
+	return current->_data;
+}
+template<typename T>
+const T& List<T>::operator[](size_t idx) const {
+	size_t size = size();
+	if (idx >= size) {
+		throw std::out_of_range("Index out of range!")
+	}
+
+	Node<T>* current = _tail->_next;
+	for (size_t i = 0; i < idx; ++i) {
+		current = current->_next;
+	}
+
+	return current->_data;
 }
 
 template<typename T>
