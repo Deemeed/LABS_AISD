@@ -63,7 +63,6 @@ void List::pop_head() {
 	_tail->_next = _tail->_next->_next;
 	delete _tail->_next;
 }
-
 void List::pop_tail() {
 	if (!_tail) return;
 
