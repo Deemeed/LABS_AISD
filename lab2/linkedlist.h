@@ -187,8 +187,9 @@ void List<T>::pop_head() {
 		return;
 	}
 
-	_tail->_next = _tail->_next->_next;
+	Node<T>* current = _tail->_next->_next;
 	delete _tail->_next;
+	_tail->_next = current;
 }
 template<typename T>
 void List<T>::pop_tail() {
@@ -309,19 +310,16 @@ List<T> sorted_union(const List<T>& first, const List<T>& second) {
 			result.push_tail(first[size1]);
 			++size1;
 		}
-		std::cout << result;
 	} while (size1 < first.size() && size2 < second.size());
 
 	while (size1 < first.size()) {
 		result.push_tail(first[size1]);
 		++size1;
-		std::cout << result;
 	}
 
 	while (size2 < second.size()) {
 		result.push_tail(second[size2]);
 		++size2;
-		std::cout << result;
 	}
 
 	return result;
