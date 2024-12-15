@@ -9,4 +9,4 @@ else()
     add_compile_options(-Wall -Wextra -pedantic)
 endif()
 
-add_executable(lab3 main.cpp "algorithms.h")
+add_executable(lab3 main.cpp "algorithms.h" "calculates.h")
