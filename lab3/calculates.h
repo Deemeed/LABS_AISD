@@ -6,7 +6,6 @@
 
 #pragma once
 
-// √енераци€ случайного массива
 std::vector<int> generateRandomArray(size_t size, int seed) {
     std::vector<int> arr(size);
     std::mt19937 gen(seed);
@@ -17,7 +16,6 @@ std::vector<int> generateRandomArray(size_t size, int seed) {
     return arr;
 }
 
-// √енераци€ полностью отсортированного массива
 std::vector<int> generateSortedArray(size_t size) {
     std::vector<int> arr(size);
     for (size_t i = 0; i < size; ++i) {
@@ -26,7 +24,6 @@ std::vector<int> generateSortedArray(size_t size) {
     return arr;
 }
 
-// √енераци€ обратно отсортированного массива
 std::vector<int> generateReverseSortedArray(size_t size) {
     std::vector<int> arr(size);
     for (size_t i = 0; i < size; ++i) {
@@ -59,7 +56,6 @@ void print_calculates() {
     };
 
     for (size_t size : sizes) {
-        // —реднее значение дл€ случайных массивов
         stats avg_bubble_sort = { 0, 0 };
         stats avg_comb_sort = { 0, 0 };
         stats avg_heap_sort = { 0, 0 };
@@ -98,7 +94,7 @@ void print_calculates() {
         std::cout << "Comb Sort (Average): Comparisons = " << avg_comb_sort.comparison_count << ", Copies = " << avg_comb_sort.copy_count << std::endl;
         std::cout << "Heap Sort (Average): Comparisons = " << avg_heap_sort.comparison_count << ", Copies = " << avg_heap_sort.copy_count << std::endl;
 
-        // ѕолностью отсортированный массив
+        // Sorted array
         std::vector<int> sorted_arr = generateSortedArray(size);
         std::vector<int> sorted_arr1 = sorted_arr;
         std::vector<int> sorted_arr2 = sorted_arr;
@@ -112,19 +108,19 @@ void print_calculates() {
         std::cout << "Comb Sort (Sorted): Comparisons = " << s2.comparison_count << ", Copies = " << s2.copy_count << std::endl;
         std::cout << "Heap Sort (Sorted): Comparisons = " << s3.comparison_count << ", Copies = " << s3.copy_count << std::endl;
 
-        // ќбратно отсортированный массив
+        // Reverse array
         std::vector<int> reverse_sorted_arr = generateReverseSortedArray(size);
         std::vector<int> reverse_sorted_arr1 = reverse_sorted_arr;
         std::vector<int> reverse_sorted_arr2 = reverse_sorted_arr;
         std::vector<int> reverse_sorted_arr3 = reverse_sorted_arr;
 
-        s1 = bubbleSort(reverse_sorted_arr1);
-        s2 = combSort(reverse_sorted_arr2);
-        s3 = heapSort(reverse_sorted_arr3);
+        stats sr1 = bubbleSort(reverse_sorted_arr1);
+        stats sr2 = combSort(reverse_sorted_arr2);
+        stats sr3 = heapSort(reverse_sorted_arr3);
 
-        std::cout << "Bubble Sort (Reverse Sorted): Comparisons = " << s1.comparison_count << ", Copies = " << s1.copy_count << std::endl;
-        std::cout << "Comb Sort (Reverse Sorted): Comparisons = " << s2.comparison_count << ", Copies = " << s2.copy_count << std::endl;
-        std::cout << "Heap Sort (Reverse Sorted): Comparisons = " << s3.comparison_count << ", Copies = " << s3.copy_count << std::endl;
+        std::cout << "Bubble Sort (Reverse Sorted): Comparisons = " << sr1.comparison_count << ", Copies = " << sr1.copy_count << std::endl;
+        std::cout << "Comb Sort (Reverse Sorted): Comparisons = " << sr2.comparison_count << ", Copies = " << sr2.copy_count << std::endl;
+        std::cout << "Heap Sort (Reverse Sorted): Comparisons = " << sr3.comparison_count << ", Copies = " << sr3.copy_count << std::endl;
 
         std::cout << std::endl;
 
@@ -136,9 +132,9 @@ void print_calculates() {
             std::to_string(s1.comparison_count), std::to_string(s1.copy_count),
             std::to_string(s2.comparison_count), std::to_string(s2.copy_count),
             std::to_string(s3.comparison_count), std::to_string(s3.copy_count),
-            std::to_string(s1.comparison_count), std::to_string(s1.copy_count),
-            std::to_string(s2.comparison_count), std::to_string(s2.copy_count),
-            std::to_string(s3.comparison_count), std::to_string(s3.copy_count)
+            std::to_string(sr1.comparison_count), std::to_string(sr1.copy_count),
+            std::to_string(sr2.comparison_count), std::to_string(sr2.copy_count),
+            std::to_string(sr3.comparison_count), std::to_string(sr3.copy_count)
             });
     }
 
